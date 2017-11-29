@@ -1,0 +1,512 @@
+/*
+88888888888       88
+88          ,d    88
+88          88    88
+88aaaaa   MM88MMM 88,dPPYba,  ,adPPYYba, 8b,dPPYba,
+88"""""     88    88P'    "8a ""     `Y8 88P'   `"8a
+88          88    88       88 ,adPPPPP88 88       88
+88          88,   88       88 88,    ,88 88       88
+88888888888 "Y888 88       88 `"8bbdP"Y8 88       88
+*/
+//Ethan's Style System
+
+//Imports
+@import url('https://fonts.googleapis.com/css?family=Raleway:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i');
+$page-font: 'Raleway', sans-serif;
+$page-font-size: 12px;
+$page-font-weight: 500;
+
+@import 'reset';
+@import 'colours';
+@import 'spacing';
+
+@mixin flex-middle-row {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: row;
+}
+@mixin flex-space-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-direction: row;
+}
+@mixin flex-middle-column {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+@mixin flex-start-row {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	flex-direction: row;
+}
+@mixin flex-end-row {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	flex-direction: row;
+}
+@mixin flex-start-column {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	flex-direction: column;
+}
+
+@mixin box-shadow($ho, $vo, $bl, $sp, $co) {
+	-webkit-box-shadow: $ho $vo $bl $sp $co;
+	   -moz-box-shadow: $ho $vo $bl $sp $co;
+	        box-shadow: $ho $vo $bl $sp $co;
+}
+
+@mixin spacing($pad, $mar) {
+	margin: $mar;
+	padding: $pad;
+}
+
+@mixin transitions {
+	transition: all 0.3s;
+}
+
+//Style
+body {
+	font:100% $page-font;
+	font-weight: $page-font-weight;
+	background: $c-page-background;
+	width:100vw;
+	height:100vh;
+	left:0;
+	@include transitions;
+}
+
+.ess-logo {
+	font-size: 40px;
+	font-weight: normal;
+	color: $c-page-text-invert;
+}
+
+h1 {
+	font-size: $spacing-L;
+	font-weight: bold;
+	@include spacing(0,$spacing-M);
+}
+h2 {
+	font-size: $spacing-M + $spacing-S + $spacing-XS;
+	font-weight: bold;
+	@include spacing(0,$spacing-M);
+}
+h3 {
+	font-size: $spacing-M + $spacing-S;
+	font-weight: bold;
+	@include spacing(0,$spacing-M);
+}
+p {
+	font-size: $spacing-M;
+	font-weight: normal;
+	@include spacing(0,$spacing-M);
+}
+
+.ess-main a {
+	color:$c-page-accent;
+	@include spacing(0,$spacing-M);
+}
+.ess-main a:hover {
+	color:$c-page-accent-hover;
+	@include spacing(0,$spacing-M);
+}
+
+.ess-head {
+	position: fixed;
+	top:0;
+	left:0;
+	width:$page-width;
+	background: $c-page-accent;
+	@include flex-middle-row;
+	@include box-shadow(0, 10px, 6px, -6px, rgba(0,0,0,0.5));
+	color: $c-page-text-invert;
+	@include transitions;
+}
+
+.ess-main {
+	width:$page-width;
+	background: $c-page-background;
+	@include flex-middle-column;
+	margin-top: $spacing-XL + $spacing-L;
+}
+
+.ess-wrapper {
+	@include flex-middle-column;
+	@include spacing(0, 0);
+	max-width: $page-width-max;
+	width:100%;
+}
+
+.ess-row {
+	@include flex-middle-row;
+	max-width: $page-width-max;
+	width:100%;
+}
+.ess-row-left {
+	@include flex-start-row;
+	max-width: $page-width-max;
+	width:100%;
+}
+.ess-row-right {
+	@include flex-end-row;
+	max-width: $page-width-max;
+	width:100%;
+}
+.wide {
+	justify-content: space-between !important;
+}
+
+.ess-price-column {
+	@include box-shadow(0, 0, 10px, 1px, rgba(0,0,0,0.5));
+	border-radius: $spacing-XS;
+	flex:1;
+	margin: $spacing-S;
+	text-align: center;
+	max-width: 400px;
+	@include transitions;
+}
+
+.ess-price-column:hover {
+	@include box-shadow(0, 0, 20px, 4px, rgba(0,0,0,0.5));
+}
+
+.ess-price-column > ul {
+	list-style-type: none;
+    @include transitions;
+}
+
+.ess-price-column-header {
+	background-color: $c-page-accent;
+    color: white;
+    font-size: $spacing-M;
+	@include spacing($spacing-M, 0);
+}
+
+.ess-price-column-image {
+	height:200px;
+	background-color: $c-page-accent-click;
+	background-repeat: no-repeat;
+    background-position: center;
+	background-size: cover;
+}
+
+.ess-price-column-price {
+	@include spacing($spacing-M, 0);
+	font-size: $spacing-M;
+	color: white;
+	background-color: $c-page-accent-click;
+}
+
+.ess-price-column-info {
+	@include spacing($spacing-S + $spacing-XS, 0);
+	font-size: $spacing-M;
+	background-color: $c-page-text-invert;
+	border-bottom: 2px solid lightgrey;
+}
+
+.ess-price-column-button {
+	@include spacing($spacing-S, 0);
+	font-size: $spacing-M;
+	background-color: lightgrey;
+}
+
+.ess-mobile-menu-button {
+	font-size: $spacing-L;
+	@include transitions;
+	display: none;
+}
+.ess-mobile-menu-button:after {
+	content:'\2630';
+}
+.ess-mobile-menu-button:hover {
+	cursor: pointer;
+}
+
+.ess-menu {
+	@include flex-space-row;
+}
+.ess-menu-item {
+	display: block;
+	@include transitions;
+	@include spacing($spacing-M, $spacing-S);
+}
+.ess-menu-item:hover {
+	background: $c-page-accent-hover;
+}
+
+.ess-dropdown {
+	position: relative;
+    display: inline-block;
+}
+.ess-dropdown::after {
+	content: '\25bc';
+}
+
+.ess-menu-dropdown {
+	display: none;
+    position: absolute;
+	z-index: 1;
+	min-width:$spacing-XXL;
+	background: $c-page-accent;
+	left:0;
+	@include box-shadow(0, 0, 10px, 1px, rgba(0,0,0,0.5));
+	@include spacing($spacing-S,0);
+	margin-top: $spacing-M;
+}
+
+.ess-menu-dropdown .ess-menu-item {
+	@include spacing($spacing-S,0);
+}
+
+.ess-dropdown:hover .ess-menu-dropdown {
+	display: block;
+}
+
+.ess-card {
+	@include box-shadow(0, 0, 10px, 1px, rgba(0,0,0,0.5));
+	@include spacing($spacing-M, $spacing-M);
+	background:white;
+	width:100%;
+	border-radius: $spacing-XS;
+}
+
+input {
+	@include spacing($spacing-S, $spacing-S);
+	border: 1px solid $c-page-accent;
+	font-size: $spacing-M;
+	@include transitions;
+	border-radius: $spacing-XS;
+}
+
+input:focus {
+	@include box-shadow(0, 0, 10px, 0, $c-page-accent-click);
+}
+
+input[type="text"] {
+	@include spacing($spacing-S, $spacing-S);
+	border: 1px solid $c-page-accent;
+	font-size: $spacing-M;
+	@include transitions;
+	border-radius: $spacing-XS;
+}
+input[type="text"]:focus {
+	@include box-shadow(0, 0, 10px, 0, $c-page-accent-click);
+}
+
+.ess-button-disabled {
+	background: grey !important;
+	border: none !important;
+}
+.ess-button-disabled:hover {
+	background: grey !important;
+	cursor:not-allowed !important;
+}
+.ess-button-disabled:active {
+	background: grey !important;
+	cursor:not-allowed !important;
+}
+.ess-button-disabled:focus {
+	background: grey !important;
+	cursor:not-allowed !important;
+	box-shadow: none !important;
+}
+
+.ess-button, input[type="button"] {
+	@include spacing($spacing-M, $spacing-S);
+	background: $c-page-accent;
+	font-size: $spacing-M;
+	color:$c-page-text-invert;
+	letter-spacing: $spacing-XXS;
+	@include transitions;
+	border-radius: $spacing-XS;
+}
+.ess-button:hover, input[type="button"]:hover {
+	background: $c-page-accent-hover;
+	cursor: pointer;
+}
+.ess-button:active, input[type="button"]:active {
+	background: $c-page-accent-click;
+}
+
+.ess-select, select {
+	@include spacing($spacing-S, $spacing-S);
+	border: 1px solid $c-page-accent;
+	font-size: $spacing-M;
+	@include transitions;
+	border-radius: $spacing-XS;
+}
+
+.ess-select:focus, select:focus {
+	@include box-shadow(0, 0, 10px, 0, $c-page-accent-click);
+}
+
+.ess-banner {
+	width:100%;
+	@include spacing($spacing-M, $spacing-S);
+	width:100%;
+	border-radius: $spacing-XS;
+	font-size: $spacing-M;
+	@include flex-start-row;
+}
+
+.ess-banner > i {
+	text-align: center;
+	font-size: $spacing-L;
+	@include spacing(0, $spacing-XS);
+	width:$spacing-L + $spacing-M;
+}
+
+.ess-danger {
+	background: $c-red-light;
+	color:$c-red;
+	border: 1px solid $c-red;
+	@include transitions;
+}.ess-danger:hover {
+	@include box-shadow(0, 0, 5px, 1px, $c-red);
+}
+
+.ess-warning {
+	background: $c-yellow-light;
+	color:$c-amber;
+	border: 1px solid $c-amber;
+	@include transitions;
+}.ess-warning:hover {
+	@include box-shadow(0, 0, 5px, 1px, $c-amber);
+}
+
+.ess-success {
+	background: $c-green-light;
+	color:$c-green;
+	border: 1px solid $c-green;
+	@include transitions;
+}.ess-success:hover {
+	@include box-shadow(0, 0, 5px, 1px, $c-green);
+}
+
+.ess-info {
+	background: $c-blue-light;
+	color:$c-blue;
+	border: 1px solid $c-blue;
+	@include transitions;
+}.ess-info:hover {
+	@include box-shadow(0, 0, 5px, 1px, $c-blue);
+}
+
+.ess-snack {
+	opacity: 0;
+	display: none;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: $c-page-accent;
+    color: $c-page-background;
+    text-align: center;
+    border-radius: $spacing-XXS;
+    padding: $spacing-M;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: $spacing-L;
+    font-size: $spacing-M;
+	@include box-shadow(0, 0, 10px, 2px, rgba(0,0,0,0.5));
+}
+
+.ess-hidden {
+	display: none;
+	opacity: 0;
+}
+
+h1.ess-full {
+	width:100%;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+	@include transitions;
+}
+
+th, td {
+    text-align: left;
+    @include spacing($spacing-M, 0);
+}
+
+tr {
+	@include transitions;
+}
+tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+tr:hover {
+	background-color: #d2d2d2;
+}
+
+th {
+    background-color: $c-page-accent;
+    color: white;
+}
+
+.ess-footer {
+	width:$page-width;
+	background: $c-page-background;
+	@include flex-middle-row;
+	padding-top:$spacing-L;
+	padding-bottom:$spacing-L;
+}
+
+@media only screen and (max-width: 1000px) {
+	.ess-wrapper {
+		width:85%;
+	}
+}
+
+
+@media only screen and (max-width: 768px) {
+    .ess-menu {
+		position: fixed;
+		top:0;
+		left:-60vw;
+		width:60vw;
+		background: $c-page-accent;
+		height: 100%;
+		@include box-shadow(0, 0, 10px, 3px, rgba(0,0,0,0.5));
+		@include flex-start-column;
+		@include transitions;
+	}
+
+	.ess-menu-item {
+		width:80%;
+		font-size: $spacing-M + $spacing-XS;
+	}
+
+	.ess-dropdown::after {
+		content: '';
+	}
+
+	.ess-menu-dropdown {
+		display: block;
+	    position: relative;
+		background: $c-page-accent;
+		@include box-shadow(0, 0, 0, 0, rgba(0,0,0,0.5));
+		@include spacing($spacing-S,0);
+		margin-top: $spacing-M;
+	}
+
+	.ess-menu-dropdown .ess-menu-item {
+		@include spacing($spacing-S,0);
+	}
+
+	.ess-mobile-menu-button {
+		display: block;
+	}
+	.ess-wrapper {
+		width:85%;
+	}
+}
