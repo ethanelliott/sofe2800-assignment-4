@@ -1,4 +1,5 @@
 <?php
+session_start();
 $saltLength = 10;
 function generateSalt() {
   global $saltLength;

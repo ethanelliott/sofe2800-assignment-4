@@ -24,6 +24,12 @@
 			}
 			return this;
 		},
+		remove: function() {
+			this.each(function() {
+				this.parentNode.removeChild(this);
+			});
+			return this;
+		},
 		hide: function() {
 			this.each(function() {
 				this.style.display = "none";
@@ -130,7 +136,7 @@
 	window.$ = $;
 })(window);
 
-function Get($url, $method, $callback, $json) {
+function Get($url, $callback, $json) {
 	$json = $json || false;
 	let xmlhttp;
 	if (window.XMLHttpRequest) {
@@ -147,6 +153,29 @@ function Get($url, $method, $callback, $json) {
 			}
 		}
 	}
-	xmlhttp.open($method, $url, true);
+	xmlhttp.open("GET", $url, true);
 	xmlhttp.send();
+}
+
+function Post($url, $data, $callback, $json) {
+	$data = $data || "";
+	$json = $json || false;
+	let xmlhttp;
+	if (window.XMLHttpRequest) {
+		xmlhttp = new XMLHttpRequest();
+	} else {
+		xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			if ($json) {
+				$callback(JSON.parse(this.responseText));
+			} else {
+				$callback(this.responseText);
+			}
+		}
+	}
+	xmlhttp.open("POST", $url, true);
+	xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xmlhttp.send($data);
 }

@@ -14,7 +14,7 @@ session_start();
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<link href="style/ess.css" rel="stylesheet" type="text/css" media="screen">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <script type="text/javascript" src="script/e.js"></script>
+  	<script type="text/javascript" src="script/e.js"></script>
 	<script>
 		let t = false;
 
@@ -25,13 +25,13 @@ session_start();
 				t = !t;
 			}
 			if (t) {
-				$(".ess-menu").style.left = "0";
-				$("body").style.left = "60vw";
-				$(".ess-head").style.left = "60vw";
+				$(".ess-menu").css({"left":"0"});
+				$("body").css({"left":"60vw"});
+				$(".ess-head").css({"left":"60vw"});
 			} else {
-				$(".ess-menu").style.left = "-60vw";
-				$("body").style.left = "0";
-				$(".ess-head").style.left = "0";
+				$(".ess-menu").css({"left":"-60vw"});
+				$("body").css({"left":"0"});
+				$(".ess-head").css({"left":"0"});
 			}
 		}
 
@@ -90,11 +90,11 @@ session_start();
 					<div class="ess-menu-item ess-dropdown">
 						Member
 						<div class="ess-menu-dropdown">
-              <?php
+              				<?php
 								if (!isset($_SESSION['loggedin'])) {
 									echo '<a href="login.php" class="ess-menu-item">Login</a><a href="register.php" class="ess-menu-item">Register</a>';
 								} else {
-									echo '<a href="userinfo.php" class="ess-menu-item">Profile</a>';
+									echo '<a href="userinfo.php" class="ess-menu-item">Profile</a><a href="logout.php" class="ess-menu-item">logout</a>';
 								}
 							 ?>
 						</div>
@@ -105,7 +105,11 @@ session_start();
 	</div>
 	<div class="ess-main" onclick="toggle(false)">
 		<div id="banner-container" class="ess-wrapper">
-
+			<?php
+				if ($_GET['error'] == 1) {
+					echo '<div id="login_error" class="ess-banner ess-danger"><i class="fa fa-exclamation-triangle"></i><span>Error! invalid username / password</span></div>';
+				}
+			?>
 		</div>
 		<div class="ess-wrapper">
       <div class="ess-card">

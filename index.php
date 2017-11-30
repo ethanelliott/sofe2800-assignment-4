@@ -20,13 +20,13 @@
 				t = !t;
 			}
 			if (t) {
-				$(".ess-menu").style.left = "0";
-				$("body").style.left = "60vw";
-				$(".ess-head").style.left = "60vw";
+				$(".ess-menu").css({"left":"0"});
+				$("body").css({"left":"60vw"});
+				$(".ess-head").css({"left":"60vw"});
 			} else {
-				$(".ess-menu").style.left = "-60vw";
-				$("body").style.left = "0";
-				$(".ess-head").style.left = "0";
+				$(".ess-menu").css({"left":"-60vw"});
+				$("body").css({"left":"0"});
+				$(".ess-head").css({"left":"0"});
 			}
 		}
 
@@ -46,22 +46,6 @@
 	    	return btoa(String.fromCharCode.apply(null, str.replace(/\r|\n/g, "").replace(/([\da-fA-F]{2}) ?/g, "0x$1 ").replace(/ +$/, "").split(" ")));
 		}
 
-		function AJAXrequest($url, $method, $callback) {
-			let xmlhttp;
-			if (window.XMLHttpRequest) {
-				xmlhttp=new XMLHttpRequest();
-			} else {
-				xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-			}
-			xmlhttp.onreadystatechange=function() {
-				if (this.readyState==4 && this.status==200) {
-					$callback(this.responseText);
-				}
-			}
-			xmlhttp.open($method, $url ,true);
-			xmlhttp.send();
-		}
-
 		function followLink($url) {
 			location.href=$url;
 		}
@@ -78,41 +62,49 @@
 		};
 	</script>
 	<script>
-
 	function showCity($str) {
 		if ($("#provinceSelect option[value='empty']") != null) {
 			$("#provinceSelect option[value='empty']").remove();
 		}
-		$("#citySelect").innerHTML = $str;
+		$("#citySelect").html($str);
 		if ($str=="") {
-			$("#citySelect").innerHTML="";
+			$("#citySelect").html("");
 			return;
 		}
-		AJAXrequest("getcity.php?q="+$str, "GET", (data)=>{
-			$("#citySelect").innerHTML = data;
+		Get("getcity.php?q="+$str, (data)=>{
+			$("#citySelect").html(data);
 		});
 	}
 
 	function showSearchResults() {
-		let cityID = $("#citySelect").value;
-		AJAXrequest("getHotel.php?city="+cityID, "GET", (data)=>{
-			$("#searchResultCards").innerHTML = data;
+		let cityID = $("#citySelect").val();
+		Get("getHotel.php?city="+cityID, (data)=>{
+			$("#searchResultCards").html(data);
 			$("#searchResults").fadeIn(1000);
+		});
+		let payload = "";
+		payload += "adultcount=" + $("#adultCount").val();
+		payload += "&childcount=" + $("#childCount").val();
+		payload += "&province=" + $("#provinceSelect").val();
+		payload += "&city=" + $("#citySelect").val();
+		payload += "&checkin=" + $("#checkin").val();
+		payload += "&checkout=" + $("#checkout").val();
+		Post("saveInput.php", payload, (data) => {
+			console.log(data);
 		});
 	}
 
 	function pageInit() {
-		if ($("#provinceSelect").value != "empty") {
-			//showCity($("#provinceSelect").value);
+		if ($("#provinceSelect").val() != "empty") {
 		}
 
 		$("#searchHotelBTN").click(() => {
 			let banCon = $("#banner-container");
 
-			if ($("#adultCount").value == "0") {
+			if ($("#adultCount").val() == "0") {
 				let hashID = generateSalt();
 				let banner = '<div id=' + hashID + ' class="ess-banner ess-danger"><i class="fa fa-exclamation-triangle"></i><span>Warning! Cannot book room with 0 adults!</span></div>';
-				banCon.innerHTML = banCon.innerHTML + banner;
+				banCon.html(banCon.html() + banner);
 				let bannerObj = $("#" + hashID);
 				bannerObj.fadeIn(100);
 				setTimeout(() => {
@@ -121,26 +113,28 @@
 				}, 10000);
 			} else {
 				showSearchResults();
-				banCon.innerHTML = "";
+				banCon.html("");
 			}
 		});
 
 		let today = new Date();
-		let tomorrow = today.getFullYear() + "-" + (today.getMonth() +1) + "-" + (today.getDate() +1);
-		let nextYear = (today.getFullYear()+1) + "-" + (today.getMonth() +1) + "-" + (today.getDate() +1);
-		let dayAfterTomorrow = today.getFullYear() + "-" + (today.getMonth() +1) + "-" + (today.getDate() +2);
-		$("#checkin").setAttribute("min", tomorrow);
-		$("#checkin").setAttribute("max", nextYear);
-		$("#checkin").value = tomorrow;
-		$("#checkout").setAttribute("min", dayAfterTomorrow);
-		$("#checkout").setAttribute("max", nextYear);
-		$("#checkout").value = dayAfterTomorrow;
+		let tmrw = new Date(today.valueOf() + (1000*60*60*24));
+		let tomorrow = tmrw.getFullYear() + "-" + (tmrw.getMonth() +1) + "-" + (tmrw.getDate());
+		let nextYear = (tmrw.getFullYear()+1) + "-" + (tmrw.getMonth() +1) + "-" + (tmrw.getDate());
+		let nextDay = new Date(tmrw.valueOf() + (1000*60*60*24));
+		let dayAfterTomorrow = nextDay.getFullYear() + "-" + (nextDay.getMonth() +1) + "-" + (nextDay.getDate());
+		$("#checkin").attr("min", tomorrow);
+		$("#checkin").attr("max", nextYear);
+		$("#checkin").val(tomorrow);
+		$("#checkout").attr("min", dayAfterTomorrow);
+		$("#checkout").attr("max", nextYear);
+		$("#checkout").val(dayAfterTomorrow);
 
-		$("#checkin").addEventListener('change', () => {
-			let selectedDate = new Date($("#checkin").value);
+		$("#checkin").on('change', () => {
+			let selectedDate = new Date($("#checkin").val());
 			let afterSelectedDate = selectedDate.getFullYear() + "-" + (selectedDate.getMonth() +1) + "-" + (selectedDate.getDate() +2);
-			$("#checkout").setAttribute("min", afterSelectedDate);
-			$("#checkout").value = afterSelectedDate;
+			$("#checkout").attr("min", afterSelectedDate);
+			$("#checkout").val(afterSelectedDate);
 		});
 	}
 	window.onload = () => {
@@ -167,7 +161,7 @@
 								if (!isset($_SESSION['loggedin'])) {
 									echo '<a href="login.php" class="ess-menu-item">Login</a><a href="register.php" class="ess-menu-item">Register</a>';
 								} else {
-									echo '<a href="userinfo.php" class="ess-menu-item">Profile</a>';
+									echo '<a href="userinfo.php" class="ess-menu-item">Profile</a><a href="logout.php" class="ess-menu-item">logout</a>';
 								}
 							 ?>
 						</div>

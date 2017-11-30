@@ -1,3 +1,6 @@
+<?php
+session_start();
+ ?>
 <!doctype html>
 <html>
 <head>
@@ -5,59 +8,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<link href="style/ess.css" rel="stylesheet" type="text/css" media="screen">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script type="text/javascript" src="script/e.js"></script>
 	<script>
-		let $ = document.querySelector.bind(document);
-
-		Object.defineProperty(HTMLElement.prototype,'click',{
-			value:function($callback){
-				this.addEventListener("click", $callback);
-			},
-			writable:false,
-			enumerable:false
-		});
-
-		Object.defineProperty(HTMLElement.prototype,'fadeIn',{
-			value:function($timeout){
-				$timeout = $timeout || 400;
-				let el = this;
-				el.style.display = "inherit";
-				el.style.opacity = 0;
-				var last = +new Date();
-				var tick = function() {
-					el.style.opacity = +el.style.opacity + (new Date() - last) / $timeout;
-					last = +new Date();
-					if (+el.style.opacity < 1) {
-						(window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
-					}
-				};
-				tick();
-			},
-			writable:false,
-			enumerable:false
-		});
-		Object.defineProperty(HTMLElement.prototype,'fadeOut',{
-			value:function($timeout){
-				$timeout = $timeout || 400;
-				let el = this;
-				el.style.display = "inherit";
-				el.style.opacity = 1;
-				var last = +new Date();
-				var tick = function() {
-					el.style.opacity = +el.style.opacity - (new Date() - last) / $timeout;
-					last = +new Date();
-					if (+el.style.opacity > 0) {
-						(window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
-
-					} else {
-						el.style.display = "none";
-					}
-				};
-				tick();
-			},
-			writable:false,
-			enumerable:false
-		});
-
 		let t = false;
 
 		function toggle(setT) {
@@ -67,18 +19,18 @@
 				t = !t;
 			}
 			if (t) {
-				$(".ess-menu").style.left = "0";
-				$("body").style.left = "60vw";
-				$(".ess-head").style.left = "60vw";
+				$(".ess-menu").css({"left":"0"});
+				$("body").css({"left":"60vw"});
+				$(".ess-head").css({"left":"60vw"});
 			} else {
-				$(".ess-menu").style.left = "-60vw";
-				$("body").style.left = "0";
-				$(".ess-head").style.left = "0";
+				$(".ess-menu").css({"left":"-60vw"});
+				$("body").css({"left":"0"});
+				$(".ess-head").css({"left":"0"});
 			}
 		}
 
-		function quickSnack($snackID, $message, $timeout, $callback) {
-			let snack = $("#" + $snackID + ".ess-snack");
+		function quickSnack($message, $timeout, $callback) {
+			let snack = $("#snack.ess-snack");
 			snack.innerHTML = $message;
 			snack.fadeIn(500);
 			setTimeout(() => {
@@ -93,25 +45,20 @@
 	    	return btoa(String.fromCharCode.apply(null, str.replace(/\r|\n/g, "").replace(/([\da-fA-F]{2}) ?/g, "0x$1 ").replace(/ +$/, "").split(" ")));
 		}
 
-		function AJAXrequest($url, $method, $callback) {
-			let xmlhttp;
-			if (window.XMLHttpRequest) {
-				xmlhttp=new XMLHttpRequest();
-			} else {
-				xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-			}
-			xmlhttp.onreadystatechange=function() {
-				if (this.readyState==4 && this.status==200) {
-					$callback(this.responseText);
-				}
-			}
-			xmlhttp.open($method, $url ,true);
-			xmlhttp.send();
-		}
-
 		function followLink($url) {
 			location.href=$url;
 		}
+
+		var saltLength = 20;
+		var generateSalt = function() {
+			var set = '0123456789abcdefghijklmnopqurstuvwxyzABCDEFGHIJKLMNOPQURSTUVWXYZ';
+			var salt = '';
+			for (var i = 0; i < saltLength; i++) {
+				var p = Math.floor(Math.random() * set.length);
+				salt += set[p];
+			}
+			return salt;
+		};
 	</script>
 	<script>
 
@@ -141,7 +88,7 @@
 								if (!isset($_SESSION['loggedin'])) {
 									echo '<a href="login.php" class="ess-menu-item">Login</a><a href="register.php" class="ess-menu-item">Register</a>';
 								} else {
-									echo '<a href="userinfo.php" class="ess-menu-item">Profile</a>';
+									echo '<a href="userinfo.php" class="ess-menu-item">Profile</a><a href="logout.php" class="ess-menu-item">logout</a>';
 								}
 							 ?>
 						</div>
@@ -152,13 +99,30 @@
 	</div>
 	<div class="ess-main" onclick="toggle(false)">
 		<div class="ess-wrapper">
-			<div class="ess-banner ess-info ess-hidden"><i class="fa fa-info-circle"></i><span>Info</span></div>
 		</div>
 		<div class="ess-wrapper">
+			<?php
+				$hotelid = $_GET['hotelid'];
+				$servername = "localhost";
+				$username =   "ethanell_hbs";
+				$password =   "password123";
+				$dbname =     "ethanell_sofe2800";
+				$con = new mysqli($servername, $username, $password, $dbname);
+				if (!$con) {
+					die('Could not connect: ' . mysqli_error($con));
+				}
+				mysqli_select_db($con,"hotel");
+				$sql="SELECT * FROM hotel WHERE Htl_id = '" . $hotelid . "'";
+				$result = mysqli_query($con,$sql);
+				if ($result->num_rows === 1) {
+					$row = $result->fetch_assoc();
+					echo "<h1>" . $row['Htl_name'] . "</h1>";
+				}
+				mysqli_close($con);
+			 ?>
 			<div id="searchResultCards" class="ess-row-left">
 				<?php
 					$hotelid = $_GET['hotelid'];
-
 					$servername = "localhost";
 					$username =   "ethanell_hbs";
 					$password =   "password123";
@@ -187,31 +151,26 @@
 									$rm_type = $rmtype_row['Typ_description'];
 								}
 							}
-
 							if ($row["Rm_smoke"] == 1) {
 								$rm_smoke = "Smoking";
 							} else {
 								$rm_smoke = "Non Smoking";
 							}
-
 							if ($row["Rm_free_barking"] == 1) {
 								$rm_parking = "Free Parking";
 							} else {
 								$rm_parking = "Parking Not Included";
 							}
-
 							if ($row["Rm_free_breakfast"] == 1) {
 								$rm_breakfast = "Free Breakfast";
 							} else {
 								$rm_breakfast = "Breakfast Not Included";
 							}
-
 							if ($row["Rm_free_internet"] == 1) {
 								$rm_internet = "Free Internet";
 							} else {
 								$rm_internet = "Internet Not Included";
 							}
-
 							echo "<div class=\"ess-price-column\">";
 							echo "<ul>";
 							echo "<li class=\"ess-price-column-header\">" . $rm_type . "</li>";

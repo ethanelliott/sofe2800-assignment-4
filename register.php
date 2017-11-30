@@ -17,13 +17,13 @@
 				t = !t;
 			}
 			if (t) {
-				$(".ess-menu").style.left = "0";
-				$("body").style.left = "60vw";
-				$(".ess-head").style.left = "60vw";
+				$(".ess-menu").css({"left":"0"});
+				$("body").css({"left":"60vw"});
+				$(".ess-head").css({"left":"60vw"});
 			} else {
-				$(".ess-menu").style.left = "-60vw";
-				$("body").style.left = "0";
-				$(".ess-head").style.left = "0";
+				$(".ess-menu").css({"left":"-60vw"});
+				$("body").css({"left":"0"});
+				$(".ess-head").css({"left":"0"});
 			}
 		}
 
@@ -86,7 +86,7 @@
 								if (!isset($_SESSION['loggedin'])) {
 									echo '<a href="login.php" class="ess-menu-item">Login</a><a href="register.php" class="ess-menu-item">Register</a>';
 								} else {
-									echo '<a href="userinfo.php" class="ess-menu-item">Profile</a>';
+									echo '<a href="userinfo.php" class="ess-menu-item">Profile</a><a href="logout.php" class="ess-menu-item">logout</a>';
 								}
 							 ?>
 						</div>
