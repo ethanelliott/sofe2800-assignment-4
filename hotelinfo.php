@@ -137,8 +137,13 @@
 					<div class="ess-menu-item ess-dropdown">
 						Member
 						<div class="ess-menu-dropdown">
-							<a href="login.php" class="ess-menu-item">Login</a>
-							<a href="register.php" class="ess-menu-item">Register</a>
+							<?php
+								if (!isset($_SESSION['loggedin'])) {
+									echo '<a href="login.php" class="ess-menu-item">Login</a><a href="register.php" class="ess-menu-item">Register</a>';
+								} else {
+									echo '<a href="userinfo.php" class="ess-menu-item">Profile</a>';
+								}
+							 ?>
 						</div>
 					</div>
 				</div>

@@ -1,3 +1,6 @@
+<?php
+	session_start();
+ ?>
 <!doctype html>
 <html>
 
@@ -6,59 +9,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<link href="style/ess.css" rel="stylesheet" type="text/css" media="screen">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<script type="text/javascript" src="script/e.js"></script>
 	<script>
-		let $ = document.querySelector.bind(document);
-
-		Object.defineProperty(HTMLElement.prototype,'click',{
-			value:function($callback){
-				this.addEventListener("click", $callback);
-			},
-			writable:false,
-			enumerable:false
-		});
-
-		Object.defineProperty(HTMLElement.prototype,'fadeIn',{
-			value:function($timeout){
-				$timeout = $timeout || 400;
-				let el = this;
-				el.style.display = "inherit";
-				el.style.opacity = 0;
-				var last = +new Date();
-				var tick = function() {
-					el.style.opacity = +el.style.opacity + (new Date() - last) / $timeout;
-					last = +new Date();
-					if (+el.style.opacity < 1) {
-						(window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
-					}
-				};
-				tick();
-			},
-			writable:false,
-			enumerable:false
-		});
-		Object.defineProperty(HTMLElement.prototype,'fadeOut',{
-			value:function($timeout){
-				$timeout = $timeout || 400;
-				let el = this;
-				el.style.display = "inherit";
-				el.style.opacity = 1;
-				var last = +new Date();
-				var tick = function() {
-					el.style.opacity = +el.style.opacity - (new Date() - last) / $timeout;
-					last = +new Date();
-					if (+el.style.opacity > 0) {
-						(window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16);
-
-					} else {
-						el.style.display = "none";
-					}
-				};
-				tick();
-			},
-			writable:false,
-			enumerable:false
-		});
-
 		let t = false;
 
 		function toggle(setT) {
@@ -211,8 +163,13 @@
 					<div class="ess-menu-item ess-dropdown">
 						Member
 						<div class="ess-menu-dropdown">
-							<a href="login.php" class="ess-menu-item">Login</a>
-							<a href="register.php" class="ess-menu-item">Register</a>
+							<?php
+								if (!isset($_SESSION['loggedin'])) {
+									echo '<a href="login.php" class="ess-menu-item">Login</a><a href="register.php" class="ess-menu-item">Register</a>';
+								} else {
+									echo '<a href="userinfo.php" class="ess-menu-item">Profile</a>';
+								}
+							 ?>
 						</div>
 					</div>
 				</div>
