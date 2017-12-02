@@ -1,12 +1,18 @@
 <!doctype html>
 <html>
-
 <head>
 	<title>West Bestern</title>
+	<?php
+     if (isset($_SESSION['loggedin']) && $_SESSION['loggedin']) {
+       echo '<meta http-equiv="refresh" content="0;url=userinfo.php" />';
+     }
+     ?>
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<link href="style/ess.css" rel="stylesheet" type="text/css" media="screen">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <script type="text/javascript" src="script/e.js"></script>
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+
 	<script>
 		let t = false;
 
@@ -60,7 +66,22 @@
 	</script>
 	<script>
 	function pageInit() {
-
+		$.validate({
+			modules : 'security, toggleDisabled',
+			disabledFormFilter : 'form.toggle-disabled',
+			errorMessagePosition : 'top',
+			onModulesLoaded : function() {
+				var optionalConfig = {
+					fontSize: '12pt',
+					padding: '4px',
+					bad : 'Very bad',
+					weak : 'Weak',
+					good : 'Good',
+					strong : 'Strong'
+				};
+				$('input[name="password_confirmation"]').displayPasswordStrength(optionalConfig);
+			}
+		});
 	}
 	window.onload = () => {
 		pageInit();
@@ -96,21 +117,23 @@
 		</div>
 	</div>
 	<div class="ess-main" onclick="toggle(false)">
-		<div id="banner-container" class="ess-wrapper">
-
-		</div>
+		<div id="banner-container" class="ess-wrapper"></div>
 		<div class="ess-wrapper">
-			<div class="ess-card">
-				<h1>Register</h1>
-				<form method="post" action="processregister.php">
-					First Name:<input name="first_name" type="text" /><br />
-					Last Name:<input name="last_name" type="text" /><br />
-					Username:<input name="username" type="text" /><br />
-					Email: <input name="email" type="email" /><br />
-					Password: <input name="pw" type="password" /><br />
-					Password Confirm: <input name="password" type="password" /><br />
-					<input type="submit" value="Register" />
+			<div class="ess-card" style="max-width:500px;">
+				<h1 class="ess-center">Register</h1>
+				<p id="error-dialog" class="ess-center" style="color:red;font-weight:bold;font-style:italic;"></p>
+				<form class="toggle-disabled" method="post" action="processregister.php">
+					<p class="ess-form-label">First Name:</p><input name="first_name" type="text" data-validation-error-msg-container="#error-dialog" data-validation="required" /><br />
+					<p class="ess-form-label">Last Name:</p><input name="last_name" type="text" data-validation-error-msg-container="#error-dialog" data-validation="required" /><br />
+					<p class="ess-form-label">Username:</p><input name="username" type="text" data-validation-error-msg-container="#error-dialog" data-validation="required server" data-validation-url="validate-username.php" /><br />
+					<p class="ess-form-label">Email:</p><input name="email" type="text" data-validation-error-msg-container="#error-dialog" data-validation="email required" /><br />
+					<p class="ess-form-label">Password:</p><input name="password_confirmation" type="password" data-validation-error-msg-container="#error-dialog"  data-validation="strength required" data-validation-strength="2" /><br />
+					<p class="ess-form-label">Password Confirm:</p><input name="password" type="password" data-validation-error-msg-container="#error-dialog" data-validation="confirmation required" /><br />
+					<div class="ess-row-right">
+						<input class="ess-button" type="submit" value="Register" />
+					</div>
 				</form>
+				<h4 class="ess-center">Already have an account? <a href="login.php">Click here to login!</a></h4>
 			</div>
 		</div>
 	</div>

@@ -63,6 +63,8 @@
 	</script>
 	<script>
 	function showCity($str) {
+		if ($("#provinceSelect").val() === "empty") {return;}
+
 		if ($("#provinceSelect option[value='empty']") != null) {
 			$("#provinceSelect option[value='empty']").remove();
 		}
@@ -94,23 +96,35 @@
 		});
 	}
 
+	function showDanger($message) {
+		let banCon = $("#banner-container");
+		let hashID = generateSalt();
+		let banner = '<div id=' + hashID + ' class="ess-banner ess-danger"><i class="fa fa-exclamation-triangle"></i><span>' + $message + '</span></div>';
+		banCon.html(banCon.html() + banner);
+		let bannerObj = $("#" + hashID);
+		bannerObj.fadeIn(100);
+		setTimeout(() => {
+			bannerObj.fadeOut(100);
+			bannerObj.remove();
+		}, 10000);
+	}
+
 	function pageInit() {
-		if ($("#provinceSelect").val() != "empty") {
-		}
-
+		showCity($("#provinceSelect").val());
 		$("#searchHotelBTN").click(() => {
-			let banCon = $("#banner-container");
-
-			if ($("#adultCount").val() == "0") {
-				let hashID = generateSalt();
-				let banner = '<div id=' + hashID + ' class="ess-banner ess-danger"><i class="fa fa-exclamation-triangle"></i><span>Warning! Cannot book room with 0 adults!</span></div>';
-				banCon.html(banCon.html() + banner);
-				let bannerObj = $("#" + hashID);
-				bannerObj.fadeIn(100);
-				setTimeout(() => {
-					bannerObj.fadeOut(100);
-					bannerObj.remove();
-				}, 10000);
+			$("#banner-container").html("");
+			if ($("#provinceSelect").val() === "empty") {
+				showDanger("Warning! Select a province!");
+			} else if ($("#citySelect").val() < 1) {
+				showDanger("Warning! Select a city!");
+			} else if ($("#checkin").val() === "") {
+				showDanger("Warning! Select a Check-in day!");
+			} else if ($("#checkout").val() === "") {
+				showDanger("Warning! Select a Check-out day!");
+			} else if ($("#checkout").val() === $("#checkin").val()) {
+				showDanger("Warning! Cannot checkin and checkout on the same day!");
+			} else if ($("#adultCount").val() == "0") {
+				showDanger("Warning! Cannot book room with 0 adults!");
 			} else {
 				showSearchResults();
 				banCon.html("");
@@ -119,10 +133,10 @@
 
 		let today = new Date();
 		let tmrw = new Date(today.valueOf() + (1000*60*60*24));
-		let tomorrow = tmrw.getFullYear() + "-" + (tmrw.getMonth() +1) + "-" + (tmrw.getDate());
-		let nextYear = (tmrw.getFullYear()+1) + "-" + (tmrw.getMonth() +1) + "-" + (tmrw.getDate());
+		let tomorrow = tmrw.getFullYear() + "-" + (tmrw.getMonth() +1) + "-" + (tmrw.getDate() < 10 ? "0" : "") + (tmrw.getDate());
+		let nextYear = (tmrw.getFullYear()+1) + "-" + (tmrw.getMonth() +1) + "-" + (tmrw.getDate() < 10 ? "0" : "") + (tmrw.getDate());
 		let nextDay = new Date(tmrw.valueOf() + (1000*60*60*24));
-		let dayAfterTomorrow = nextDay.getFullYear() + "-" + (nextDay.getMonth() +1) + "-" + (nextDay.getDate());
+		let dayAfterTomorrow = nextDay.getFullYear() + "-" + (nextDay.getMonth() +1) + "-" + (nextDay.getDate() < 10 ? "0" : "") + (nextDay.getDate());
 		$("#checkin").attr("min", tomorrow);
 		$("#checkin").attr("max", nextYear);
 		$("#checkin").val(tomorrow);
@@ -132,7 +146,8 @@
 
 		$("#checkin").on('change', () => {
 			let selectedDate = new Date($("#checkin").val());
-			let afterSelectedDate = selectedDate.getFullYear() + "-" + (selectedDate.getMonth() +1) + "-" + (selectedDate.getDate() +2);
+			selectedDate = new Date(selectedDate.valueOf() + (2*1000*60*60*24));
+			let afterSelectedDate = selectedDate.getFullYear() + "-" + (selectedDate.getMonth() +1) + "-" + (selectedDate.getDate() < 10 ? "0" : "") + (selectedDate.getDate());
 			$("#checkout").attr("min", afterSelectedDate);
 			$("#checkout").val(afterSelectedDate);
 		});

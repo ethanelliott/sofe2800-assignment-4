@@ -92,10 +92,13 @@ INSERT INTO `city` (`Cty_id`, `Cty_Name`, `Cty_province_id`) VALUES
 
 DROP TABLE IF EXISTS `guest`;
 CREATE TABLE IF NOT EXISTS `guest` (
-  `Gst_id` int(11) NOT NULL,
+  `Gst_id` int NOT NULL AUTO_INCREMENT,
   `Gst_first_name` varchar(80) NOT NULL,
   `Gst_last_name` varchar(80) NOT NULL,
   `Gst_member_since` date NOT NULL,
+  `Gst_username` text NOT NULL,
+  `Gst_password` text NOT NULL,
+  `Gst_email` text NOT NULL,
   PRIMARY KEY (`Gst_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -305,7 +308,6 @@ INSERT INTO `room_type` (`Typ_id`, `Typ_description`) VALUES
 -- Constraints for table `booking`
 --
 ALTER TABLE `booking`
-  ADD CONSTRAINT `booking_ibfk_1` FOREIGN KEY (`Bok_guest_id`) REFERENCES `guest` (`Gst_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `booking_ibfk_2` FOREIGN KEY (`Bok_room_id`) REFERENCES `room` (`Rm_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --

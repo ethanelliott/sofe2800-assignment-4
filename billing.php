@@ -6,11 +6,11 @@ session_start();
 
 <head>
   <?php
-   if (isset($_SESSION['loggedin']) && $_SESSION['loggedin']) {
-     echo '<meta http-equiv="refresh" content="0;url=userinfo.php" />';
+   if ((!isset($_SESSION['loggedin']) || !$_SESSION['loggedin'])) {
+     echo '<meta http-equiv="refresh" content="0;url=login.php" />';
    }
    ?>
-	<title>West Bestern | Login</title>
+	<title>West Bestern | Billing Info</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<link href="style/ess.css" rel="stylesheet" type="text/css" media="screen">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -120,15 +120,51 @@ session_start();
 		</div>
 		<div class="ess-wrapper">
       <div class="ess-card" style="max-width:550px;">
-        <h1 class="ess-center">Login</h1>
-        <form method="post" action="processlogin.php">
-          <p class="ess-form-label">Username:</p><input name="uname" type="text" /><br />
-          <p class="ess-form-label">Password:</p><input name="upass" type="password" /><br />
-		  <div class="ess-row-right">
-			  <input class="ess-button" type="submit" value="Login"/>
-		  </div>
-        </form>
-		<h4 class="ess-center">Don't have an account yet? <a href="register.php">Click here to create one!</a></h4>
+        <h1 class="ess-center">Billing Information</h1>
+		<form method="POST" action="sendconfirm.php">
+			<div class="ess-row">
+				<p class="ess-form-label">First Name: </p>
+				<input id="fname" name="fname" type="text" placeholder="John" required />
+			</div>
+			<div class="ess-row">
+				<p class="ess-form-label">Last Name: </p>
+				<input id="lname" name="lname" type="text" placeholder="Smith" required />
+			</div>
+			<div class="ess-row">
+				<p class="ess-form-label">Email: </p>
+				<input id="email" name="email" type="text" placeholder="johnsmith@email.com" required />
+			</div>
+			<div class="ess-row">
+				<p class="ess-form-label">Street Address: </p>
+				<input id="address" name="address" type="text" placeholder="123 Main St." required />
+			</div>
+			<div class="ess-row">
+				<p class="ess-form-label">City: </p>
+				<input id="city" name="city" type="text" placeholder="Hamilton" required />
+			</div>
+			<div class="ess-row">
+				<p class="ess-form-label">Postal Code: </p>
+				<input id="postal" name="postal" type="text" placeholder="L#L #L#" required />
+			</div>
+			<div class="ess-row">
+				<p class="ess-form-label">Country: </p>
+				<input id="country" name="country" type="text" placeholder="Canada" required />
+			</div>
+			<div class="ess-row">
+				<p class="ess-form-label">Phone Number: </p>
+				<input id="phone" name="phone" type="text" placeholder="(###) - ### - ####" required />
+			</div>
+			<div class="ess-row">
+				<input type="submit" class="ess-button" value="Submit" />
+			</div>
+		</form>
+		<script>
+			let sess = <?php echo json_encode($_SESSION) ?>;
+			console.log(sess);
+			$("#fname").val(sess.firstname);
+			$("#lname").val(sess.lastname);
+			$("#email").val(sess.email);
+		</script>
       </div>
 		</div>
 	</div>

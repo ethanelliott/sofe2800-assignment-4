@@ -50,6 +50,15 @@ body {
   font-weight: normal;
   color: #FFFFFF; }
 
+.ess-center {
+  text-align: center; }
+
+.ess-left {
+  text-align: left; }
+
+.ess-right {
+  text-align: right; }
+
 h1 {
   font-size: 32px;
   font-weight: bold;
@@ -264,6 +273,11 @@ p {
   width: 100%;
   border-radius: 4px; }
 
+.ess-form-label {
+  width: 150px;
+  display: inline-block;
+  text-align: right; }
+
 input {
   margin: 8px;
   padding: 8px;
@@ -290,19 +304,19 @@ input[type="text"]:focus {
   -moz-box-shadow: 0 0 10px 0 #5b80de;
   box-shadow: 0 0 10px 0 #5b80de; }
 
-.ess-button-disabled {
+.disabled {
   background: grey !important;
   border: none !important; }
 
-.ess-button-disabled:hover {
+.disabled:hover {
   background: grey !important;
   cursor: not-allowed !important; }
 
-.ess-button-disabled:active {
+.disabled:active {
   background: grey !important;
   cursor: not-allowed !important; }
 
-.ess-button-disabled:focus {
+.disabled:focus {
   background: grey !important;
   cursor: not-allowed !important;
   box-shadow: none !important; }

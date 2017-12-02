@@ -9,6 +9,12 @@ session_start();
 	<link href="style/ess.css" rel="stylesheet" type="text/css" media="screen">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<script type="text/javascript" src="script/e.js"></script>
+	<style>
+		.star-container {
+			color:gold;
+			font-size:3em;
+		}
+	</style>
 	<script>
 		let t = false;
 
@@ -117,6 +123,16 @@ session_start();
 				if ($result->num_rows === 1) {
 					$row = $result->fetch_assoc();
 					echo "<h1>" . $row['Htl_name'] . "</h1>";
+					$htlrate = $row['Htl_Rate'];
+					$maxRate = 5;
+					echo "<div class='star-container'>";
+					for ($i = 0; $i < $htlrate; $i++) {
+						echo '<i class="fa fa-star" aria-hidden="true"></i>';
+					}
+					for ($i = 0; $i < ($maxRate - $htlrate); $i++) {
+						echo '<i class="fa fa-star-o" aria-hidden="true"></i>';
+					}
+					echo "</div>";
 				}
 				mysqli_close($con);
 			 ?>
@@ -133,7 +149,7 @@ session_start();
 					}
 
 					mysqli_select_db($con,"room");
-					$sql="SELECT * FROM room WHERE Rm_Hotel_id = '" . $hotelid . "'";
+					$sql="SELECT * FROM room WHERE Rm_Hotel_id = '" . $hotelid . "' AND Rm_status = 0";
 					$result = mysqli_query($con,$sql);
 					if ($result->num_rows > 0) {
 						while($row = $result->fetch_assoc()) {
@@ -171,19 +187,23 @@ session_start();
 							} else {
 								$rm_internet = "Internet Not Included";
 							}
+
 							echo "<div class=\"ess-price-column\">";
 							echo "<ul>";
 							echo "<li class=\"ess-price-column-header\">" . $rm_type . "</li>";
-							echo "<li class=\"ess-price-column-price\">$" . $row["Rm_price"] . ".00</li>";
+							echo "<li class=\"ess-price-column-price\">Weekday: $" . $row["Rm_price"] . ".00</li>";
+							echo "<li class=\"ess-price-column-price\">Weekend: $" . $row["Rm_price_weekend"] . "</li>";
 							echo "<li class=\"ess-price-column-info\"><p>" . $rm_smoke . "</p></li>";
 							echo "<li class=\"ess-price-column-info\"><p>" . $row["Rm_number_beds"] . " beds</p></li>";
 							echo "<li class=\"ess-price-column-info\"><p>" . $rm_parking . "</p></li>";
 							echo "<li class=\"ess-price-column-info\"><p>" . $rm_breakfast . "</p></li>";
 							echo "<li class=\"ess-price-column-info\"><p>" . $rm_internet . "</p></li>";
-							echo "<li class=\"ess-price-column-button\"><input type=\"button\" value=\"Reserve\" class=\"ess-button ess-button-disabled\"></li>";
+							echo "<li class=\"ess-price-column-button\"><input type=\"button\" value=\"Reserve\" class=\"ess-button\" onclick=\"followLink('reserve.php?url=" . urlencode("hotelinfo.php?hotelid=" . $_GET['hotelid']) . "&rmid=" . $row["Rm_id"] . "&htid=" . $row["Rm_Hotel_id"] . "');\"></li>";
 							echo "</ul>";
 							echo "</div>";
 						}
+					} else {
+						echo "<h3>No Rooms available!<a href='javascript:window.history.back();'>Click here to go back</a></h3>";
 					}
 
 					mysqli_close($con);

@@ -80,12 +80,19 @@
 			});
 			return this;
 		},
-		val: function() {
-			var len = this.length;
-			return this[--len].value;
+		val: function($value) {
+			if ($value != undefined) {
+				this.each(function() {
+					this.value = $value;
+				});
+				return this;
+			} else {
+				var len = this.length;
+				return this[--len].value;
+			}
 		},
 		html: function($value) {
-			if ($value) {
+			if ($value != undefined) {
 				this.each(function() {
 					this.innerHTML = $value;
 				});

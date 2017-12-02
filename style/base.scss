@@ -89,6 +89,16 @@ body {
 	color: $c-page-text-invert;
 }
 
+.ess-center {
+	text-align: center;
+}
+.ess-left {
+	text-align: left;
+}
+.ess-right {
+	text-align: right;
+}
+
 h1 {
 	font-size: $spacing-L;
 	font-weight: bold;
@@ -278,6 +288,12 @@ p {
 	border-radius: $spacing-XS;
 }
 
+.ess-form-label {
+	width: 150px;
+    display: inline-block;
+    text-align: right;
+}
+
 input {
 	@include spacing($spacing-S, $spacing-S);
 	border: 1px solid $c-page-accent;
@@ -301,19 +317,19 @@ input[type="text"]:focus {
 	@include box-shadow(0, 0, 10px, 0, $c-page-accent-click);
 }
 
-.ess-button-disabled {
+.disabled {
 	background: grey !important;
 	border: none !important;
 }
-.ess-button-disabled:hover {
+.disabled:hover {
 	background: grey !important;
 	cursor:not-allowed !important;
 }
-.ess-button-disabled:active {
+.disabled:active {
 	background: grey !important;
 	cursor:not-allowed !important;
 }
-.ess-button-disabled:focus {
+.disabled:focus {
 	background: grey !important;
 	cursor:not-allowed !important;
 	box-shadow: none !important;

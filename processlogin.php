@@ -73,6 +73,10 @@
 	<?php
 		if ($error) {
 			echo '<meta http-equiv="refresh" content="0;url=login.php?error=1" />';
+		} else if ((isset($_SESSION['returnafterlogin']) && $_SESSION['returnafterlogin']) && isset($_SESSION['url'])) {
+			echo '<meta http-equiv="refresh" content="0;url=' . $_SESSION['url'] . '" />';
+			$_SESSION['returnafterlogin'] = false;
+			$_SESSION['url'] = "";
 		} else {
 			echo '<meta http-equiv="refresh" content="0;url=userinfo.php" />';
 		}
